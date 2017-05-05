@@ -26,6 +26,7 @@ import { VariableEditor } from './VariableEditor';
 import { ResultViewer } from './ResultViewer';
 import { DocExplorer } from './DocExplorer';
 import { QueryHistory } from './QueryHistory';
+import { AttachmentsPanel } from './AttachmentsPanel';
 import CodeMirrorSizer from '../utility/CodeMirrorSizer';
 import StorageAPI from '../utility/StorageAPI';
 import getQueryFacts from '../utility/getQueryFacts';
@@ -67,6 +68,7 @@ export class GraphiQL extends React.Component {
     getDefaultFieldNames: PropTypes.func,
     editorTheme: PropTypes.string,
     onToggleHistory: PropTypes.func,
+    onToggleAttachment: PropTypes.func,
   }
 
   constructor(props) {
@@ -119,6 +121,8 @@ export class GraphiQL extends React.Component {
         (this._storage.get('docExplorerOpen') === 'true') || false,
       historyPaneOpen:
           (this._storage.get('historyPaneOpen') === 'true') || false,
+      attachmentPaneOpen:
+          (this._storage.get('attachmentPaneOpen') === 'true') || false,
       docExplorerWidth: Number(this._storage.get('docExplorerWidth')) || 350,
       isWaitingForResponse: false,
       subscription: null,
@@ -230,6 +234,7 @@ export class GraphiQL extends React.Component {
     this._storage.set('docExplorerWidth', this.state.docExplorerWidth);
     this._storage.set('docExplorerOpen', this.state.docExplorerOpen);
     this._storage.set('historyPaneOpen', this.state.historyPaneOpen);
+    this._storage.set('attachmentPaneOpen', this.state.attachmentPaneOpen);
   }
 
   render() {
@@ -251,6 +256,11 @@ export class GraphiQL extends React.Component {
           onClick={this.handleToggleHistory}
           title="Show History"
           label="History"
+        />
+        <ToolbarButton
+          onClick={this.handleAttachments}
+          title="Show Attachments Window"
+          label="Attachments"
         />
 
       </GraphiQL.Toolbar>;
@@ -275,6 +285,12 @@ export class GraphiQL extends React.Component {
       zIndex: '7'
     };
 
+    const attachmentPaneStyle = {
+      display: this.state.attachmentPaneOpen ? 'block' : 'none',
+      width: '230px',
+      zIndex: '7'
+    };
+
     const variableOpen = this.state.variableEditorOpen;
     const variableStyle = {
       height: variableOpen ? this.state.variableEditorHeight : null
@@ -294,6 +310,15 @@ export class GraphiQL extends React.Component {
               {'\u2715'}
             </div>
           </QueryHistory>
+        </div>
+        <div className="historyPaneWrap attachmentPaneWrap" style={attachmentPaneStyle}>
+          <AttachmentsPanel
+            ref={n => { this.attachmentsComponent = n; }}
+            operations={this.state.operations}>
+            <div className="docExplorerHide" onClick={this.handleAttachments}>
+              {'\u2715'}
+            </div>
+          </AttachmentsPanel>
         </div>
         <div className="editorWrap">
           <div className="topBarWrap">
@@ -537,7 +562,7 @@ export class GraphiQL extends React.Component {
       query,
       variables: jsonVariables,
       operationName
-    });
+    },this.attachmentsComponent.state.attachments[operationName]);
 
     if (isPromise(fetch)) {
       // If fetcher returned a Promise, then call the callback when the promise
@@ -765,6 +790,13 @@ export class GraphiQL extends React.Component {
       this.props.onToggleHistory(!this.state.historyPaneOpen);
     }
     this.setState({ historyPaneOpen: !this.state.historyPaneOpen });
+  }
+
+  handleAttachments = () => {
+    if (typeof this.props.onToggleAttachment === 'function') {
+      this.props.onToggleAttachment(!this.state.attachmentPaneOpen);
+    }
+    this.setState({ attachmentPaneOpen: !this.state.attachmentPaneOpen });
   }
 
   handleResizeStart = downEvent => {
