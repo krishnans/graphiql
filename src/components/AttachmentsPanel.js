@@ -10,9 +10,14 @@ export class AttachmentsPanel extends React.Component {
 
   constructor(props) {
     super(props);
+
+    let mutationOperations = this.props.operations.filter( (operation) => {
+      return operation.operation === "mutation";
+    });
+
     this.state = {
       attachments: [],
-      operations: this.props.operations,
+      operations: mutationOperations,
       isSane: true
     };
   }
@@ -55,7 +60,11 @@ export class AttachmentsPanel extends React.Component {
       return;
     }
 
-    this.setState({operations: nextProps.operations, isSane: true}) 
+    let mutationOperations = nextProps.operations.filter( (operation) => {
+      return operation.operation === "mutation";
+    });
+
+    this.setState({operations: mutationOperations, isSane: true}) 
   }
 
   render() {
