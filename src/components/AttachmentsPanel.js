@@ -11,9 +11,11 @@ export class AttachmentsPanel extends React.Component {
   constructor(props) {
     super(props);
 
-    let mutationOperations = this.props.operations.filter( (operation) => {
-      return operation.operation === "mutation";
-    });
+
+  
+    let mutationOperations = (this.props.operations || []).filter( (operation) => {
+        return operation.operation === "mutation";
+      });
 
     this.state = {
       attachments: [],
