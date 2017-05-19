@@ -11,7 +11,7 @@ class AddAttachmentItem extends React.Component {
     
     const files = this.fileInput.files
     if (files.length > 0) {
-      const fieldName = this.keyNameInput.value || files[0].name
+      const fieldName = this.keyNameInput.value || files[0].name.split('.', 1)[0]
       this.props.onAdd(fieldName, files[0])
       this.fileInput.value = null
       this.keyNameInput.value = null
