@@ -1,8 +1,7 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
@@ -13,7 +12,7 @@
 export default function getSelectedOperationName(
   prevOperations,
   prevSelectedOperationName,
-  operations
+  operations,
 ) {
   // If there are not enough operations to bother with, return nothing.
   if (!operations || operations.length < 1) {
@@ -22,8 +21,10 @@ export default function getSelectedOperationName(
 
   // If a previous selection still exists, continue to use it.
   const names = operations.map(op => op.name && op.name.value);
-  if (prevSelectedOperationName &&
-      names.indexOf(prevSelectedOperationName) !== -1) {
+  if (
+    prevSelectedOperationName &&
+    names.indexOf(prevSelectedOperationName) !== -1
+  ) {
     return prevSelectedOperationName;
   }
 

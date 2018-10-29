@@ -1,14 +1,12 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
 
 /**
  * ExecuteButton
@@ -22,7 +20,7 @@ export class ExecuteButton extends React.Component {
     onStop: PropTypes.func,
     isRunning: PropTypes.bool,
     operations: PropTypes.array,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -41,19 +39,20 @@ export class ExecuteButton extends React.Component {
     let options = null;
     if (hasOptions && optionsOpen) {
       const highlight = this.state.highlight;
-      options =
+      options = (
         <ul className="execute-options">
           {operations.map(operation =>
             <li
               key={operation.name ? operation.name.value : '*'}
-              className={operation === highlight && 'selected'}
+              className={operation === highlight ? 'selected' : undefined}
               onMouseOver={() => this.setState({ highlight: operation })}
               onMouseOut={() => this.setState({ highlight: null })}
               onMouseUp={() => this._onOptionSelected(operation)}>
               {operation.name ? operation.name.value : '<Unnamed>'}
-            </li>
+            </li>,
           )}
-        </ul>;
+        </ul>
+      );
     }
 
     // Allow click event if there is a running query or if there are not options
@@ -70,9 +69,9 @@ export class ExecuteButton extends React.Component {
       onMouseDown = this._onOptionsOpen;
     }
 
-    const pathJSX = this.props.isRunning ?
-      <path d="M 10 10 L 23 10 L 23 23 L 10 23 z" /> :
-      <path d="M 11 9 L 24 16 L 11 23 z" />;
+    const pathJSX = this.props.isRunning
+      ? <path d="M 10 10 L 23 10 L 23 23 L 10 23 z" />
+      : <path d="M 11 9 L 24 16 L 11 23 z" />;
 
     return (
       <div className="execute-button-wrap">
@@ -95,12 +94,12 @@ export class ExecuteButton extends React.Component {
     } else {
       this.props.onRun();
     }
-  }
+  };
 
   _onOptionSelected = operation => {
     this.setState({ optionsOpen: false });
     this.props.onRun(operation.name && operation.name.value);
-  }
+  };
 
   _onOptionsOpen = downEvent => {
     let initialPress = true;
@@ -113,16 +112,16 @@ export class ExecuteButton extends React.Component {
       } else {
         document.removeEventListener('mouseup', onMouseUp);
         onMouseUp = null;
-        const isOptionsMenuClicked = (
+        const isOptionsMenuClicked =
           downTarget.parentNode.compareDocumentPosition(upEvent.target) &
-          Node.DOCUMENT_POSITION_CONTAINED_BY
-        );
-        if (!isOptionsMenuClicked) { // menu calls setState if it was clicked
+          Node.DOCUMENT_POSITION_CONTAINED_BY;
+        if (!isOptionsMenuClicked) {
+          // menu calls setState if it was clicked
           this.setState({ optionsOpen: false });
         }
       }
     };
 
     document.addEventListener('mouseup', onMouseUp);
-  }
+  };
 }

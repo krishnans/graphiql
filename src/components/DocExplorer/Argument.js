@@ -1,15 +1,14 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { astFromValue, print } from 'graphql';
 import TypeLink from './TypeLink';
+import DefaultValue from './DefaultValue';
 
 export default function Argument({ arg, onClickType, showDefaultValue }) {
   return (
@@ -17,14 +16,7 @@ export default function Argument({ arg, onClickType, showDefaultValue }) {
       <span className="arg-name">{arg.name}</span>
       {': '}
       <TypeLink type={arg.type} onClick={onClickType} />
-      {arg.defaultValue !== undefined && showDefaultValue !== false &&
-        <span>
-          {' = '}
-          <span className="arg-default-value">
-            {print(astFromValue(arg.defaultValue, arg.type))}
-          </span>
-        </span>
-      }
+      {showDefaultValue !== false && <DefaultValue field={arg} />}
     </span>
   );
 }

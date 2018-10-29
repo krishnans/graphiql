@@ -1,14 +1,14 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import { GraphQLNonNull, GraphQLList } from 'graphql';
-import marked from 'marked';
+import MD from 'markdown-it';
 
+const md = new MD();
 
 /**
  * Render a custom UI for CodeMirror's hint which includes additional info
@@ -41,36 +41,40 @@ export default function onHasCompletion(cm, data, onHintInformationRender) {
       // When CodeMirror attempts to remove the hint UI, we detect that it was
       // removed and in turn remove the information nodes.
       let onRemoveFn;
-      hintsUl.addEventListener('DOMNodeRemoved', onRemoveFn = event => {
-        if (event.target === hintsUl) {
-          hintsUl.removeEventListener('DOMNodeRemoved', onRemoveFn);
-          information = null;
-          deprecation = null;
-          onRemoveFn = null;
-        }
-      });
+      hintsUl.addEventListener(
+        'DOMNodeRemoved',
+        (onRemoveFn = event => {
+          if (event.target === hintsUl) {
+            hintsUl.removeEventListener('DOMNodeRemoved', onRemoveFn);
+            information = null;
+            deprecation = null;
+            onRemoveFn = null;
+          }
+        }),
+      );
     }
 
     // Now that the UI has been set up, add info to information.
-    const description = ctx.description ?
-      marked(ctx.description, { sanitize: true }) :
-      'Self descriptive.';
-    const type = ctx.type ?
-      '<span class="infoType">' + renderType(ctx.type) + '</span>' :
-      '';
+    const description = ctx.description
+      ? md.render(ctx.description)
+      : 'Self descriptive.';
+    const type = ctx.type
+      ? '<span class="infoType">' + renderType(ctx.type) + '</span>'
+      : '';
 
-    information.innerHTML = '<div class="content">' +
-      (description.slice(0, 3) === '<p>' ?
-        '<p>' + type + description.slice(3) :
-        type + description) + '</div>';
+    information.innerHTML =
+      '<div class="content">' +
+      (description.slice(0, 3) === '<p>'
+        ? '<p>' + type + description.slice(3)
+        : type + description) +
+      '</div>';
 
     if (ctx.isDeprecated) {
-      const reason = ctx.deprecationReason ?
-        marked(ctx.deprecationReason, { sanitize: true }) :
-        '';
+      const reason = ctx.deprecationReason
+        ? md.render(ctx.deprecationReason)
+        : '';
       deprecation.innerHTML =
-        '<span class="deprecation-label">Deprecated</span>' +
-        reason;
+        '<span class="deprecation-label">Deprecated</span>' + reason;
       deprecation.style.display = 'block';
     } else {
       deprecation.style.display = 'none';

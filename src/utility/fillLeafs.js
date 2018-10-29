@@ -1,8 +1,7 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
@@ -14,7 +13,6 @@ import {
   TypeInfo,
   visit,
 } from 'graphql';
-
 
 /**
  * Given a document string which may not be valid due to terminal fields not
@@ -55,11 +53,11 @@ export function fillLeafs(schema, docString, getDefaultFieldNames) {
           const indent = getIndentation(docString, node.loc.start);
           insertions.push({
             index: node.loc.end,
-            string: ' ' + print(selectionSet).replace(/\n/g, '\n' + indent)
+            string: ' ' + print(selectionSet).replace(/\n/g, '\n' + indent),
           });
         }
       }
-    }
+    },
   });
 
   // Apply the insertions, but also return the insertions metadata.
@@ -82,17 +80,17 @@ function defaultGetDefaultFieldNames(type) {
 
   // Is there an `id` field?
   if (fields['id']) {
-    return [ 'id' ];
+    return ['id'];
   }
 
   // Is there an `edges` field?
   if (fields['edges']) {
-    return [ 'edges' ];
+    return ['edges'];
   }
 
   // Is there an `node` field?
   if (fields['node']) {
-    return [ 'node' ];
+    return ['node'];
   }
 
   // Include all leaf-type fields.
@@ -134,11 +132,11 @@ function buildSelectionSet(type, getDefaultFieldNames) {
         kind: 'Field',
         name: {
           kind: 'Name',
-          value: fieldName
+          value: fieldName,
         },
-        selectionSet: buildSelectionSet(fieldType, getDefaultFieldNames)
+        selectionSet: buildSelectionSet(fieldType, getDefaultFieldNames),
       };
-    })
+    }),
   };
 }
 

@@ -1,12 +1,11 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
- /* eslint-disable no-console */
+/* eslint-disable no-console */
 import express from 'express';
 import path from 'path';
 import browserify from 'browserify';
@@ -26,13 +25,13 @@ app.use('/graphql', graphqlHTTP({ schema }));
 let bundleBuffer;
 
 const b = browserify({
-  entries: [ path.join(__dirname, '../src/index.js') ],
+  entries: [path.join(__dirname, '../src/index.js')],
   cache: {},
   packageCache: {},
-  transform: [ babelify, browserifyShim ],
-  plugin: [ watchify ],
+  transform: [babelify, browserifyShim],
+  plugin: [watchify],
   standalone: 'GraphiQL',
-  globalTransform: 'browserify-shim'
+  globalTransform: 'browserify-shim',
 });
 
 b.on('update', () => makeBundle());

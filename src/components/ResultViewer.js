@@ -1,12 +1,12 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 /**
@@ -23,6 +23,10 @@ export class ResultViewer extends React.Component {
   static propTypes = {
     value: PropTypes.string,
     editorTheme: PropTypes.string,
+    ResultsTooltip: PropTypes.any,
+  };
+  constructor() {
+    super();
   }
 
   componentDidMount() {
@@ -33,8 +37,24 @@ export class ResultViewer extends React.Component {
     require('codemirror/addon/fold/brace-fold');
     require('codemirror/addon/dialog/dialog');
     require('codemirror/addon/search/search');
+    require('codemirror/addon/search/searchcursor');
+    require('codemirror/addon/search/jump-to-line');
     require('codemirror/keymap/sublime');
     require('codemirror-graphql/results/mode');
+
+    if (this.props.ResultsTooltip) {
+      require('codemirror-graphql/utils/info-addon');
+      const tooltipDiv = document.createElement('div');
+      CodeMirror.registerHelper(
+        'info',
+        'graphql-results',
+        (token, options, cm, pos) => {
+          const Tooltip = this.props.ResultsTooltip;
+          ReactDOM.render(<Tooltip pos={pos} />, tooltipDiv);
+          return tooltipDiv;
+        },
+      );
+    }
 
     this.viewer = CodeMirror(this._node, {
       lineWrapping: true,
@@ -44,16 +64,21 @@ export class ResultViewer extends React.Component {
       mode: 'graphql-results',
       keyMap: 'sublime',
       foldGutter: {
-        minFoldSize: 4
+        minFoldSize: 4,
       },
-      gutters: [ 'CodeMirror-foldgutter' ],
+      gutters: ['CodeMirror-foldgutter'],
+      info: Boolean(this.props.ResultsTooltip),
       extraKeys: {
+        // Persistent search box in Query Editor
+        'Cmd-F': 'findPersistent',
+        'Ctrl-F': 'findPersistent',
+
         // Editor improvements
         'Ctrl-Left': 'goSubwordLeft',
         'Ctrl-Right': 'goSubwordRight',
         'Alt-Left': 'goGroupLeft',
         'Alt-Right': 'goGroupRight',
-      }
+      },
     });
   }
 
@@ -73,7 +98,9 @@ export class ResultViewer extends React.Component {
     return (
       <div
         className="result-window"
-        ref={node => { this._node = node; }}
+        ref={node => {
+          this._node = node;
+        }}
       />
     );
   }

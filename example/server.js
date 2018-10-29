@@ -1,8 +1,7 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
@@ -13,7 +12,7 @@ const schema = require('./schema');
 
 const app = express();
 app.use(express.static(__dirname));
-app.use('/graphql', graphqlHTTP(() => ({ schema })));
+app.use('/graphql', graphqlHTTP(() => ({ schema, graphiql: true })));
 
 app.listen(0, function() {
   const port = this.address().port;

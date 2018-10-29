@@ -133,7 +133,6 @@
   margin-left: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .graphiql-container .enum-value {
@@ -161,7 +160,7 @@
 }
 
 .graphiql-container .arg-default-value {
-  color: #0B7FC7;
+  color: #43A047;
 }
 
 .graphiql-container .doc-deprecation {

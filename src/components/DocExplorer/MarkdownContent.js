@@ -1,20 +1,21 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Marked from 'marked';
+import MD from 'markdown-it';
+
+const md = new MD();
 
 export default class MarkdownContent extends React.Component {
   static propTypes = {
     markdown: PropTypes.string,
     className: PropTypes.string,
-  }
+  };
 
   shouldComponentUpdate(nextProps) {
     return this.props.markdown !== nextProps.markdown;
@@ -26,11 +27,10 @@ export default class MarkdownContent extends React.Component {
       return <div />;
     }
 
-    const html = Marked(markdown, { sanitize: true });
     return (
       <div
         className={this.props.className}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: md.render(markdown) }}
       />
     );
   }

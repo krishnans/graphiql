@@ -4,6 +4,8 @@ GraphiQL
 */ˈɡrafək(ə)l/* A graphical interactive in-browser GraphQL IDE. [Try the live demo](http://graphql.org/swapi-graphql).
 
 [![Build Status](https://travis-ci.org/graphql/graphiql.svg?branch=master)](https://travis-ci.org/graphql/graphiql)
+[![CDNJS](https://img.shields.io/cdnjs/v/graphiql.svg)](https://cdnjs.com/libraries/graphiql)
+[![npm](https://img.shields.io/npm/v/graphiql.svg)](https://www.npmjs.com/package/graphiql)
 
 [![](resources/graphiql.png)](http://graphql.org/swapi-graphql)
 
@@ -174,7 +176,7 @@ class CustomGraphiQL extends React.Component {
 
   render() {
     return (
-      <GraphiQL ref={c => { this.graphiql = c; }} ...this.state>
+      <GraphiQL ref={c => { this.graphiql = c; }} {...this.state}>
         <GraphiQL.Logo>
           Custom Logo
         </GraphiQL.Logo>
@@ -184,12 +186,12 @@ class CustomGraphiQL extends React.Component {
           <GraphiQL.Button
             onClick={this.handleClickPrettifyButton}
             label="Prettify"
-            title="Prettify Query"
+            title="Prettify Query (Shift-Ctrl-P)"
           />
 
           // Some other possible toolbar items
-          <GraphiQL.Menu title="File">
-            <GraphiQL.MenuItem title="Save" onClick={...}>
+          <GraphiQL.Menu label="File" title="File">
+            <GraphiQL.MenuItem label="Save" title="Save" onSelect={...}>
           </GraphiQL.Menu>
 
           <OtherReactComponent someProps="true" />
@@ -216,7 +218,7 @@ In order to theme the editor portions of the interface, you can supply a `editor
 
 // In your GraphiQL JSX
 <GraphiQL
-  editorTheme="solarized"
+  editorTheme="solarized light"
 />
 ```
 
@@ -305,7 +307,7 @@ mutation AddBWingQuery($input: IntroduceShipInput!) {
   }
 }
 ```
-Read more from [Relay Mutation Documentation](https://facebook.github.io/relay/docs/graphql-mutations.html).
+Read more from [Relay Mutation Documentation](https://facebook.github.io/relay/docs/en/graphql-server-specification.html#mutations).
 
 **Fragment**
 

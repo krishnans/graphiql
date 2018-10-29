@@ -1,8 +1,7 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
@@ -12,12 +11,11 @@ import PropTypes from 'prop-types';
 import debounce from '../../utility/debounce';
 
 export default class SearchBox extends React.Component {
-
   static propTypes = {
     value: PropTypes.string,
     placeholder: PropTypes.string,
     onSearch: PropTypes.func,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -46,10 +44,10 @@ export default class SearchBox extends React.Component {
     const value = event.target.value;
     this.setState({ value });
     this.debouncedOnSearch(value);
-  }
+  };
 
   handleClear = () => {
     this.setState({ value: '' });
     this.props.onSearch('');
-  }
+  };
 }

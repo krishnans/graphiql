@@ -1,14 +1,12 @@
 /**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
+ *  Copyright (c) Facebook, Inc. and its affiliates.
  *
- *  This source code is licensed under the license found in the
+ *  This source code is licensed under the MIT license found in the
  *  LICENSE file in the root directory of this source tree.
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
 
 /**
  * ToolbarSelect
@@ -21,8 +19,8 @@ export class ToolbarSelect extends React.Component {
   static propTypes = {
     title: PropTypes.string,
     label: PropTypes.string,
-    onSelect: PropTypes.func
-  }
+    onSelect: PropTypes.func,
+  };
 
   constructor(props) {
     super(props);
@@ -36,25 +34,29 @@ export class ToolbarSelect extends React.Component {
   render() {
     let selectedChild;
     const visible = this.state.visible;
-    const optionChildren = React.Children.map(this.props.children,
-    (child, i) => {
-      if (!selectedChild || child.props.selected) {
-        selectedChild = child;
-      }
-      const onChildSelect =
-      child.props.onSelect ||
-        this.props.onSelect && this.props.onSelect.bind(null,
-          child.props.value,
-          i
-      );
-      return <ToolbarSelectOption {...child.props} onSelect={onChildSelect} />;
-    });
+    const optionChildren = React.Children.map(
+      this.props.children,
+      (child, i) => {
+        if (!selectedChild || child.props.selected) {
+          selectedChild = child;
+        }
+        const onChildSelect =
+          child.props.onSelect ||
+          (this.props.onSelect &&
+            this.props.onSelect.bind(null, child.props.value, i));
+        return (
+          <ToolbarSelectOption {...child.props} onSelect={onChildSelect} />
+        );
+      },
+    );
     return (
       <a
         className="toolbar-select toolbar-button"
         onClick={this.handleOpen.bind(this)}
         onMouseDown={preventDefault}
-        ref={node => {this._node = node;}}
+        ref={node => {
+          this._node = node;
+        }}
         title={this.props.title}>
         {selectedChild.props.label}
         <svg width="13" height="10">
@@ -95,22 +97,24 @@ export class ToolbarSelect extends React.Component {
     this.setState({ visible: true });
     this._subscribe();
   };
-
 }
 
 export function ToolbarSelectOption({ onSelect, label, selected }) {
   return (
     <li
-      onMouseOver={e => { e.target.className = 'hover'; }}
-      onMouseOut={e => { e.target.className = null; }}
+      onMouseOver={e => {
+        e.target.className = 'hover';
+      }}
+      onMouseOut={e => {
+        e.target.className = null;
+      }}
       onMouseDown={preventDefault}
       onMouseUp={onSelect}>
       {label}
       {selected &&
         <svg width="13" height="13">
           <polygon points="4.851,10.462 0,5.611 2.314,3.297 4.851,5.835
-            10.686,0 13,2.314 4.851,10.462"
-          />
+            10.686,0 13,2.314 4.851,10.462" />
         </svg>}
     </li>
   );
